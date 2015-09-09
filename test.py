@@ -15,7 +15,7 @@ class SingleSwitchTopoWithLossAndDelay(Topo):
         switch = self.addSwitch('s1')
         for h in range(n):
             host = self.addHost('h%s' % (h + 1))
-            self.addLink(host, switch,bw=10,max_queue_size=1000, delay=delay, loss=loss, use_htb=True)
+            self.addLink(host, switch,bw=10,max_queue_size=100, delay=delay, loss=loss, use_htb=True)
 #class SingleSwitchTopo(Topo):
 #    "Single switch connected to n hosts."
 #    def build(self,n=2):
@@ -40,9 +40,12 @@ def perfTest(n,delay,loss,c):
     h1, h2 ,s1 = net.get('h1', 'h2', 's1')
     #h1.sendCmd('sudo tcpdump -s 68 -ttt -w h1-normal.pcap -i h1-eth0 &')
     #h2.sendCmd('sudo tcpdump -s 68 -ttt -w h2-normal.pcap -i h2-eth0 &')
+    #h1.sendCmd('./D-ITG-2.8.1-r1023/bin/ITGRecv -l recv_log_file &')
+    #h2.sendCmd('./D-ITG-2.8.1-r1023/bin/ITGSend -a 10.0.0.1 -rp 9501 -C 1000 -u 500 1000 -l send_log_file &')
     cmd = 'sudo tcpdump -s 68 -ttt -w s1-%d-%s-%d.pcap -i s1-eth1 &'%(c,delay if delay else '0ms',loss)
     s1.sendCmd(cmd)
     net.iperf((h1, h2))
+    #CLI(net)
     net.stop()
 
     #cleanup()
