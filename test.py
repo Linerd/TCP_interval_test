@@ -15,7 +15,7 @@ class SingleSwitchTopoWithLossAndDelay(Topo):
         switch = self.addSwitch('s1')
         for h in range(n):
             host = self.addHost('h%s' % (h + 1))
-            self.addLink(host, switch, delay=delay, loss=loss, use_htb=True)
+            self.addLink(host, switch,bw=10,max_queue_size=1000, delay=delay, loss=loss, use_htb=True)
 #class SingleSwitchTopo(Topo):
 #    "Single switch connected to n hosts."
 #    def build(self,n=2):
